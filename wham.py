@@ -6,9 +6,12 @@ https://github.com/Rapptz/discord.py/blob/master/examples/basic_voice.py
 import os
 import asyncio
 
+from dotenv import load_dotenv
 import youtube_dl
 import discord
 from discord.ext import commands
+
+load_dotenv()
 
 # Uncomment to suppress noise about console usage from errors
 # youtube_dl.utils.bug_reports_message = lambda: ''
@@ -62,15 +65,12 @@ class Wham(commands.Cog):
             else:
                 print('Wham completed successfully.')
 
-            await asyncio.sleep(5)
             await ctx.voice_client.disconnect()
 
         async with ctx.typing():
-            player = discord.FFmpegOpusAudio(
-                self.filename, bitrate=32, ** ffmpeg_options)
-            # player = discord.PCMVolumeTransformer(
-            #     discord.FFmpegPCMAudio(self.filename, **ffmpeg_options)
-            # )
+            player = discord.PCMVolumeTransformer(
+                discord.FFmpegPCMAudio(self.filename, **ffmpeg_options)
+            )
             ctx.voice_client.play(
                 player,
                 after=lambda e: asyncio.run_coroutine_threadsafe(
@@ -87,7 +87,8 @@ class Wham(commands.Cog):
         await self.stream(ctx)
         await ctx.send(
             'Whamming "{}". Type `!stop` to stop Whamming.'.format(
-                channel)
+                channel
+            )
         )
 
     @commands.command()
@@ -117,8 +118,5 @@ async def on_ready():
     print('Logged in as {0} ({0.id})'.format(bot.user))
     print('------')
 
-
-# filename = download_video(os.environ.get('VIDEO'))
-bot.add_cog(Wham(
-    bot, 'videos/youtube-bwNV7TAWN3M-Wham_-_Last_Christmas_Official_4K_Video.webm'))
+bot.add_cog(Wham(bot, os.getenv('VIDEO_FILE')))
 bot.run(os.getenv('TOKEN'))

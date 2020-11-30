@@ -7,11 +7,12 @@ import os
 import asyncio
 
 import youtube_dl
-import discord
-from discord.ext import commands
 
 # Uncomment to suppress noise about console usage from errors
 # youtube_dl.utils.bug_reports_message = lambda: ''
+
+# VIDEO = 'https://www.youtube.com/watch?v=q6EoRBvdVPQ'  # Yee
+VIDEO = 'https://www.youtube.com/watch?v=-YUH8Xfz-jg'  # Wham! lyrics
 
 ffmpeg_options = {
     'options': '-vn'
@@ -44,5 +45,5 @@ def download_video(url):
     return filename
 
 
-filename = download_video(os.environ.get('VIDEO'))
+filename = download_video(VIDEO)
 print(filename)
